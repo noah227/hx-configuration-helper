@@ -44,3 +44,8 @@ h.getItem(keyMap.keepUserSelection)
 h.updateItem(keyMap.keepUserSelection, true)
 ```
 
+### 小技巧
+
+参见 [小技巧](./skill.md) 
+
+
