@@ -1,0 +1,35 @@
+{
+    "name": "hx-configuration-helper",
+    "version": "1.2.2",
+    "description": "",
+    "main": "index.js",
+    "bin": {
+        "hx-cfg-helper": "bin/index.js"
+    },
+    "scripts": {
+        "test:help": "node ./bin/index.js --help",
+        "test": "node ./bin/index.js"
+    },
+    "files": [
+        "bin",
+        "index.js"
+    ],
+    "keywords": [
+        "hbuilderx",
+        "hx",
+        "hbx",
+        "plugin",
+        "extension",
+        "configuration",
+        "config",
+        "helper"
+    ],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/node": "^20.11.30"
+    },
+    "dependencies": {
+        "commander": "^12.0.0"
+    }
+}
