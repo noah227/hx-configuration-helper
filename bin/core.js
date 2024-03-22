@@ -1,9 +1,15 @@
 const fs = require("fs");
 const path = require("path");
 
-const tpl = `
-module.exports = @content
-`
+
+/**
+ * 处理形如a_xxx的key
+ * @param {string} key
+ */
+const processKey = key => {
+    if (key.indexOf("_") < 0) return key
+    return key.slice(key.indexOf("_") + 1)
+}
 
 module.exports = (options) => {
     const cwd = process.cwd()
@@ -32,18 +38,40 @@ module.exports = (options) => {
 
         const configuration = pkg.contributes?.configuration
         if (configuration) {
+            const cfgHelperPath = path.join(cwd, "helper.json")
+            const cfgHelperSchemaPath = path.join(cwd, "helper.schema.json")
+            // let _data = {}
+            // // 如果存在生成的文件，则读取进行继承
+            // if(fs.existsSync(cfgHelperPath)) {
+            //     _data = JSON.parse(fs.readFileSync(cfgHelperPath, {encoding: "utf8"}))
+            // }
+
             const properties = configuration.properties || []
-            const keyMap = Object.keys(properties).reduce((keyMap, k) => {
-                k = k.split(".")[1]
-                keyMap[k] = k
-                return keyMap
-            }, {})
-            const cfgHelperPath = path.join(cwd, "config.helper.js")
+            const {keyMap, schemaMap} = Object.keys(properties).reduce(({keyMap, schemaMap}, k) => {
+                const kPart = k.split(".")[1]
+                const _k = processKey(kPart)
+                keyMap[_k] = kPart
+
+                schemaMap[_k] = {}
+                const {description} = properties[k]
+                if (description) schemaMap[_k]["description"] = description
+
+                return {keyMap, schemaMap}
+            }, {
+                keyMap: {"$schema": "helper.schema.json"},
+                schemaMap: {}
+            })
             fs.writeFileSync(
                 cfgHelperPath,
-                tpl.replace("@content", JSON.stringify(keyMap, null, 4))
+                JSON.stringify(keyMap, null, 4)
             )
-            console.log(">>>", cfgHelperPath)
+            fs.writeFileSync(
+                cfgHelperSchemaPath,
+                JSON.stringify({
+                    properties: schemaMap
+                }, null, 4)
+            )
+            console.log(">>>", cfgHelperPath, cfgHelperSchemaPath)
         }
     }
 }
