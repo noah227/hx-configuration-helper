@@ -1,6 +1,6 @@
 # hx-configuration-helper
 
-> 一种更舒适的hx插件配置方法~
+> 一个能让你的hx插件配置写起来更舒服的东东~
 
 >
 > hx插件获取配置太繁琐？配置排序和命名两难择？
@@ -48,7 +48,7 @@ h.getItem(keyMap.keepUserSelection)
 h.updateItem(keyMap.keepUserSelection, true)
 ```
 
-### 小技巧
+### 相关小技巧
 
 参见 [小技巧](./skill.md) 
 
