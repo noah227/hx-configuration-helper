@@ -11,7 +11,7 @@ const processKey = key => {
     return key.slice(key.indexOf("_") + 1)
 }
 
-const tpl = `
+const tpl = `/** 由${require("../package.json").name}生成 | @date */
 module.exports = {
 @content
 }
@@ -71,7 +71,8 @@ module.exports = (options) => {
             })
             fs.writeFileSync(
                 cfgHelperPath,
-                tpl.replace("@content", lineGroup.join("\n"))
+                tpl.replace("@date", new Date().toLocaleString())
+                    .replace("@content", lineGroup.join("\n"))
             )
             console.log("已生成文件：", cfgHelperPath)
         }
