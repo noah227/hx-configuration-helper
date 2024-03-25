@@ -71,7 +71,7 @@ module.exports = (options) => {
                     properties: schemaMap
                 }, null, 4)
             )
-            console.log(">>>", cfgHelperPath, cfgHelperSchemaPath)
+            console.log("已生成文件：", cfgHelperPath, cfgHelperSchemaPath)
         }
     }
 }

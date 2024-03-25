@@ -1,3 +1,5 @@
+# hx-configuration-helper
+
 > hx插件获取配置太繁琐？
 >
 > 配置排序和命名两难择？
@@ -13,9 +15,7 @@
 
 > cli用来根据插件项目根目录下的package.json生成配置key的映射文件
 >
-> 一是为了方便代码自动推断
->
-> 二是为了方便自定义中间映射
+> 主要是为了方便代码自动推断
 
 建议添加在package.json里，方便运行
 
@@ -27,7 +27,10 @@
 }
 ```
 
-运行后，插件根目录下会生成`config.helper.js`文件，不要修改文件名称
+运行后，插件根目录下会生成`helper.json`和`helper.schema.json`文件，不要修改文件名称
+
+其中，schema提取了对应配置项的`description`，即描述信息，这样就可以在`helper.json`里用鼠标
+选择在配置项上查看描述信息了
 
 ### cjs函数部分
 
@@ -37,7 +40,7 @@ const {Helper} = require("hx-configuration-helper")
 // 初始化，传入根路径
 const h = new Helper(__dirname)
 // cli生成的内容
-const keyMap = require("./config.helper.js")
+const keyMap = require("./helper.json")
 // 获取配置项
 h.getItem(keyMap.keepUserSelection)
 // 更新配置项
