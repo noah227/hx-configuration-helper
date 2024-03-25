@@ -3,7 +3,7 @@ const path = require("path");
 
 
 /**
- * 处理形如a_xxx的key
+ * 处理形如a_xxx的key为xxx
  * @param {string} key
  */
 const processKey = key => {
@@ -11,6 +11,11 @@ const processKey = key => {
     return key.slice(key.indexOf("_") + 1)
 }
 
+const tpl = `
+module.exports = {
+@content
+}
+`
 module.exports = (options) => {
     const cwd = process.cwd()
     const pkgPath = path.join(cwd, "package.json")
@@ -38,13 +43,7 @@ module.exports = (options) => {
 
         const configuration = pkg.contributes?.configuration
         if (configuration) {
-            const cfgHelperPath = path.join(cwd, "helper.json")
-            const cfgHelperSchemaPath = path.join(cwd, "helper.schema.json")
-            // let _data = {}
-            // // 如果存在生成的文件，则读取进行继承
-            // if(fs.existsSync(cfgHelperPath)) {
-            //     _data = JSON.parse(fs.readFileSync(cfgHelperPath, {encoding: "utf8"}))
-            // }
+            const cfgHelperPath = path.join(cwd, "config.helper.js")
 
             const properties = configuration.properties || []
             const {keyMap, schemaMap} = Object.keys(properties).reduce(({keyMap, schemaMap}, k) => {
@@ -52,26 +51,29 @@ module.exports = (options) => {
                 const _k = processKey(kPart)
                 keyMap[_k] = kPart
 
-                schemaMap[_k] = {}
-                const {description} = properties[k]
-                if (description) schemaMap[_k]["description"] = description
+                schemaMap[_k] = {...properties[k]}
 
                 return {keyMap, schemaMap}
             }, {
-                keyMap: {"$schema": "helper.schema.json"},
+                keyMap: {},
                 schemaMap: {}
+            })
+            // 备注行&字段行
+            let lineGroup = []
+            Object.entries(keyMap).forEach(([k, v], index) => {
+                const {description, type, default: defaultValue} = {...schemaMap[k]}
+                let comment = ""
+                if (description) comment = description
+                if (type) comment += ` | @return {${type}}`
+                if (defaultValue) comment += ` @default ${defaultValue}`
+                if (comment) lineGroup.push(`\t/** ${comment} */`)
+                lineGroup.push(`\t${k}: "${v}",`)
             })
             fs.writeFileSync(
                 cfgHelperPath,
-                JSON.stringify(keyMap, null, 4)
+                tpl.replace("@content", lineGroup.join("\n"))
             )
-            fs.writeFileSync(
-                cfgHelperSchemaPath,
-                JSON.stringify({
-                    properties: schemaMap
-                }, null, 4)
-            )
-            console.log("已生成文件：", cfgHelperPath, cfgHelperSchemaPath)
+            console.log("已生成文件：", cfgHelperPath)
         }
     }
 }

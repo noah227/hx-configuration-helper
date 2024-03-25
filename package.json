@@ -1,6 +1,6 @@
 {
     "name": "hx-configuration-helper",
-    "version": "1.4.3",
+    "version": "1.5.7",
     "description": "",
     "main": "index.js",
     "bin": {
