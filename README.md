@@ -10,7 +10,7 @@
 ## 使用
 
 > 本组件分两部分构成： [cli](#cli部分) 和 [cjs函数](#cjs函数部分)
-> 
+>
 > 组件应用实例：[hx-copy-to](https://github.com/noah227/hx-copy-to)
 
 ### cli部分
@@ -31,7 +31,9 @@
 
 运行后，插件根目录下会生成`config.helper.js`文件
 
-> **注意事项：cli部分识别形如`hx-my-plugin.a_configName`的key，在使用时请确保下划线后的部分不要重复**
+> **注意事项：**
+> **cli部分识别形如`hx-my-plugin.a_configName`的key，在使用时请确保下划线后的部分不要重复**
+> key的处理识别的是最后一个下划线
 
 ### cjs函数部分
 
