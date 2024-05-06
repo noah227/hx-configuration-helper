@@ -8,7 +8,7 @@ const path = require("path");
  */
 const processKey = key => {
     if (key.indexOf("_") < 0) return key
-    return key.slice(key.indexOf("_") + 1)
+    return key.slice(key.lastIndexOf("_") + 1)
 }
 
 const tpl = `/** 由${require("../package.json").name}生成 | @date */
